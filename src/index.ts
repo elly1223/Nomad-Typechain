@@ -1,9 +1,15 @@
+import { time } from 'console';
+import * as CryptoJS from 'crypto-js'; // typescript는 import하는 방식이 조금 다름.
+
 class Block {
   public index: number;
   public hash: string;
   public previousHash: string;
   public data: string;
   public timestamp: number;
+
+  static calculateBlockHash = (index: number, previousHash: string, timestamp: number, data: string): string => CryptoJS.SHA256(index + previousHash + timestamp + data).toString();
+
   constructor(index: number, hash: string, previousHash: string, data: string, timestamp: number) {
     this.index = index;
     this.hash = hash;
@@ -15,10 +21,12 @@ class Block {
 
 const genesisBlock: Block = new Block(0, '202020202020', '', 'Hello', 123456);
 
-let blockchain: [Block] = [genesisBlock];
+let blockchain: Block[] = [genesisBlock];
 
-blockchain.push('stuff'); // block이 아니면 push가 안됨!
+const getBlockchain = (): Block[] => blockchain;
 
-console.log(blockchain);
+const getLatestBlock = (): Block => blockchain[blockchain.length - 1];
+
+const getNewTimeStamp = (): number => Math.round(new Date().getTime() / 1000);
 
 export {};
